@@ -1,0 +1,9 @@
+{
+  "label_filter": "",
+  "completion_label": "",
+  "component_name": "",
+  "squad_completion_label": "",
+  "user_map": {
+    "gh-username": "jira-username/name/email"
+  }
+}
