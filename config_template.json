@@ -1,5 +1,6 @@
 {
   "label_filter": "",
+  "label_exclusions": "",
   "completion_label": "",
   "component_name": "",
   "squad_completion_label": "",

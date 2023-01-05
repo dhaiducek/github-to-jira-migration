@@ -23,6 +23,7 @@ else:
     exit(1)
 
 label_filter = ''
+label_exclusions = ''
 completion_label = ''
 squad_completion_label = ''
 component_name = ''
@@ -30,6 +31,8 @@ component_name = ''
 # Parse config file
 if 'label_filter' in config_json:
     label_filter = config_json['label_filter']
+if 'label_exclusions' in config_json:
+    label_exclusions = config_json['label_exclusions']
 if 'completion_label' in config_json:
     completion_label = config_json['completion_label']
 if 'squad_completion_label' in config_json:
@@ -42,7 +45,10 @@ description = 'Utility to migrate issues from GitHub to Jira'
 parser = argparse.ArgumentParser(description=description)
 parser.add_argument(
     '-l', '--label-filter',
-    help='Filter issues by GitHub label query')
+    help='Filter issues by GitHub label (comma separated list)')
+parser.add_argument(
+    '-e', '--label-exclusions',
+    help='Exclude issues by GitHub label (comma separated list)')
 parser.add_argument(
     '-c', '--completion-label',
     help='Label to filter/add for issues that have been migrated')
@@ -64,6 +70,8 @@ args = parser.parse_args()
 
 if args.label_filter:
     label_filter = args.label_filter
+if args.label_exclusions:
+    label_exclusions = args.label_exclusions
 if args.completion_label:
     completion_label = args.completion_label
 if args.squad_completion_label:
@@ -73,7 +81,7 @@ if args.component_name:
 
 # Collect GitHub issues using query config or CLI
 gh_issues = ghutils.get_issues_by_label(
-    label_filter, f'{completion_label},{squad_completion_label},jira-epic')
+    label_filter, f'{completion_label},{squad_completion_label},{label_exclusions}')
 
 jira_mappings = []
 
