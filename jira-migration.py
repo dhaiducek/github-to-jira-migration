@@ -90,7 +90,7 @@ for gh_issue in gh_issues:
     jira_comment_input = []
     for comment in gh_comments:
         jira_comment_input.append(
-            migrationutils.comment_map(comment, user_map))
+            migrationutils.comment_map(comment))
 
     # Store issue mapping objects
     mapping_obj = {

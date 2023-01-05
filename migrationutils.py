@@ -127,14 +127,11 @@ def issue_map(gh_issue, user_mappings, default_user):
     }, can_close
 
 
-def comment_map(gh_comment, user_mappings):
+def comment_map(gh_comment):
     """Return a dict for Jira to process from a given GitHub comment"""
-    assert user_mappings  # user_mappings cannot be None
 
     gh_user = gh_comment['user']['login']
 
-    # A default user isn't required here because it's inferred from the token
     return {
-        'author': user_map(gh_user, user_mappings),
         'body': f'{gh_comment["created_at"]} @{gh_user}\n{gh_comment["body"]}'
     }

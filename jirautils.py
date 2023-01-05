@@ -134,7 +134,6 @@ def add_comment_from_url(api_url, props):
             'type': 'group',
             'value': security_level
         },
-        'author': props['author'],
         'body': props['body']
     }
 
