@@ -105,6 +105,7 @@ for gh_issue in gh_issues:
         pprint(mapping_obj)
 
 # Iterate over Jira mappings to create issues with comments
+issue_failures = []
 for jira_map in jira_mappings:
     print(
         f'* Creating Jira issue for {jira_map["issue"][jirautils.gh_issue_field]} ({jira_map["issue"]["summary"]})')
@@ -122,6 +123,7 @@ for jira_map in jira_mappings:
 
     if not args.dry_run and jira_key == '':
         print('* Error: A Jira key was not returned in the creation response')
+        issue_failures.append(jira_map["issue"][jirautils.gh_issue_field])
         continue
 
     print(f'* Adding comments from GitHub to new Jira issue {jira_key}')
@@ -164,3 +166,8 @@ for jira_map in jira_mappings:
                 gh_issue_number, squad_completion_label)
             if args.verbose:
                 pprint(label_response)
+
+if len(issue_failures) > 0:
+    print('* Failed to create Jira issues for:')
+    for issue in issue_failures:
+        print(issue)
