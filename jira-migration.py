@@ -10,7 +10,10 @@ config_json = json.load(config_file)
 config_file.close()
 
 user_map = {}
+component_map = {}
 if config_json:
+    if 'component_map' in config_json:
+        component_map = config_json['component_map']
     if 'user_map' in config_json:
         user_map = config_json['user_map']
     if 'default_jira_user' in config_json:
@@ -91,7 +94,7 @@ for gh_issue in gh_issues:
     print(f'* Creating Jira mapping for {gh_url} ({gh_issue["title"]})')
 
     jira_issue_input, can_close = migrationutils.issue_map(
-        gh_issue, user_map, default_user)
+        gh_issue, component_map, user_map, default_user)
 
     # Collect comments from the GitHub issue
     gh_comments = ghutils.get_issue_comments(gh_issue)

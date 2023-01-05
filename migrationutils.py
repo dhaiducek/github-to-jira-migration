@@ -18,14 +18,8 @@ def user_map(gh_username, user_mappings, default_user=''):
     return user
 
 
-def component_map(gh_labels):
+def component_map(gh_labels, component_map):
     """Return the Jira components from a given GitHub label"""
-
-    component_map = {
-        'squad:policy-grc': 'GRC',
-        'squad:doc': 'Documentation',
-        'squad:qe': 'QE'
-    }
 
     components = []
     component_count = 0
@@ -92,7 +86,7 @@ def should_close(gh_issue):
     return ghutils.has_label(gh_issue, no_close_labels)
 
 
-def issue_map(gh_issue, user_mappings, default_user):
+def issue_map(gh_issue, component_map, user_mappings, default_user):
     """Return a dict for Jira to process from a given GitHub issue"""
     assert user_mappings  # user_mappings cannot be None
 
@@ -103,7 +97,7 @@ def issue_map(gh_issue, user_mappings, default_user):
     # - It's connected to Bugzilla
     # - It's a multi-squad issue
     can_close = True
-    components, component_count = component_map(gh_labels)
+    components, component_count = component_map(gh_labels, component_map)
     if component_count > 1 or should_close(gh_issue):
         can_close = False
 
