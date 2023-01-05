@@ -82,7 +82,8 @@ for gh_issue in gh_issues:
     gh_url = gh_issue['html_url']
     print(f'* Creating Jira mapping for {gh_url} ({gh_issue["title"]})')
 
-    jira_issue_input, can_close = migrationutils.issue_map(gh_issue, user_map, default_user)
+    jira_issue_input, can_close = migrationutils.issue_map(
+        gh_issue, user_map, default_user)
 
     # Collect comments from the GitHub issue
     gh_comments = ghutils.get_issue_comments(gh_issue)
@@ -114,8 +115,10 @@ for jira_map in jira_mappings:
         create_response = jirautils.create_issue(jira_map["issue"])
         if args.verbose:
             pprint(create_response)
-        jira_api_url = create_response['self']
-        jira_key = create_response['key']
+        if 'self' in create_response:
+            jira_api_url = create_response['self']
+        if 'key' in create_response:
+            jira_key = create_response['key']
 
     if not args.dry_run and jira_key == '':
         print('* Error: A Jira key was not returned in the creation response')
