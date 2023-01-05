@@ -3,6 +3,7 @@
   "completion_label": "",
   "component_name": "",
   "squad_completion_label": "",
+  "default_jira_user": "jira-username/name/email",
   "user_map": {
     "gh-username": "jira-username/name/email"
   }

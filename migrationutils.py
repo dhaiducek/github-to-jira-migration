@@ -2,12 +2,12 @@ import ghutils
 import jirautils
 
 
-def user_map(gh_username, user_mappings):
-    """Return the user e-mail from the usermap.json"""
+def user_map(gh_username, user_mappings, default_user=''):
+    """Return the user e-mail from the usermap"""
     assert user_mappings  # user_mappings cannot be None
 
     user = None
-    user_email = ''
+    user_email = default_user
 
     if gh_username in user_mappings:
         user_email = user_mappings[gh_username]
@@ -23,6 +23,7 @@ def component_map(gh_labels):
 
     component_map = {
         'squad:policy-grc': 'GRC',
+        'squad:doc': 'Documentation'
     }
 
     components = []
@@ -90,7 +91,7 @@ def should_close(gh_issue):
     return ghutils.has_label(gh_issue, no_close_labels)
 
 
-def issue_map(gh_issue, user_mappings):
+def issue_map(gh_issue, user_mappings, default_user):
     """Return a dict for Jira to process from a given GitHub issue"""
     assert user_mappings  # user_mappings cannot be None
 
@@ -116,7 +117,7 @@ def issue_map(gh_issue, user_mappings):
         'components': components,
         'summary': gh_issue['title'],
         'description': gh_issue['body'],
-        'reporter': user_map(gh_issue['user']['login'], user_mappings),
+        'reporter': user_map(gh_issue['user']['login'], user_mappings, default_user),
         'assignee': user_map(gh_assignee, user_mappings),
         # 'status': '', <-- This would need to be pulled from ZenHub's Pipeline field
         'priority': priority_map(gh_labels),
@@ -132,6 +133,7 @@ def comment_map(gh_comment, user_mappings):
 
     gh_user = gh_comment['user']['login']
 
+    # A default user isn't required here because it's inferred from the token
     return {
         'author': user_map(gh_user, user_mappings),
         'body': f'{gh_comment["created_at"]} @{gh_user}\n{gh_comment["body"]}'

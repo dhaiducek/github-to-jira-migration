@@ -9,10 +9,17 @@ config_file = open('config.json')
 config_json = json.load(config_file)
 config_file.close()
 
-if config_json and 'user_map' in config_json:
-    user_map = config_json['user_map']
+user_map = {}
+if config_json:
+    if 'user_map' in config_json:
+        user_map = config_json['user_map']
+    if 'default_jira_user' in config_json:
+        default_user = config_json['default_jira_user']
+    else:
+        print('Error finding default Jira user. This is required for creating Jira issues.')
+        exit(1)
 else:
-    print('Error finding user_map in config.json.')
+    print('Error loading config.json.')
     exit(1)
 
 label_filter = ''
@@ -75,7 +82,7 @@ for gh_issue in gh_issues:
     gh_url = gh_issue['html_url']
     print(f'* Creating Jira mapping for {gh_url} ({gh_issue["title"]})')
 
-    jira_issue_input, can_close = migrationutils.issue_map(gh_issue, user_map)
+    jira_issue_input, can_close = migrationutils.issue_map(gh_issue, user_map, default_user)
 
     # Collect comments from the GitHub issue
     gh_comments = ghutils.get_issue_comments(gh_issue)

@@ -1,6 +1,5 @@
 import migrationauth
 import requests
-from pprint import pprint
 
 base_url = 'https://issues.redhat.com/rest/api/latest'
 issue_url = f'{base_url}/issue'
@@ -90,8 +89,6 @@ def create_issue(props):
             gh_issue_field: props[gh_issue_field]
         }
     }
-
-    pprint(request_data)
 
     response = requests.post(
         url,
