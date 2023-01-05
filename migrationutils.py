@@ -118,11 +118,8 @@ def issue_map(gh_issue, user_mappings, default_user):
 
     issue_title = gh_issue['title']
     issue_type = type_map(gh_labels)
-    epic_name = ''
-    if issue_type == 'Epic':
-        epic_name = issue_title
 
-    return {
+    issue_mapping = {
         'issuetype': {
             'name': issue_type
         },
@@ -133,12 +130,16 @@ def issue_map(gh_issue, user_mappings, default_user):
         'assignee': user_map(gh_assignee, user_mappings),
         # 'status': '', <-- This would need to be pulled from ZenHub's Pipeline field
         'priority': priority_map(gh_labels),
-        # 'version': '', -- This would need to be pulled from ZenHub's Release field
+        # 'version': '', <-- This would need to be pulled from ZenHub's Release field
         # Custom "GitHub Issue" field
-        jirautils.gh_issue_field: gh_issue['html_url'],
-        # Custom "Epic Name" field
-        jirautils.epic_field: epic_name
-    }, can_close
+        jirautils.gh_issue_field: gh_issue['html_url']
+    }
+
+    # Custom "Epic Name" field
+    if issue_type == 'Epic':
+        issue_mapping[jirautils.epic_field] = issue_title
+
+    return issue_mapping, can_close
 
 
 def comment_map(gh_comment):

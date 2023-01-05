@@ -69,6 +69,7 @@ def create_issue(props):
     """Create Jira issue"""
 
     url = issue_url
+    issue_type = props['issuetype']
     request_data = {
         'fields': {
             'project': {
@@ -77,7 +78,7 @@ def create_issue(props):
             'security': {
                 'name': security_level
             },
-            'issuetype': props['issuetype'],
+            'issuetype': issue_type,
             'components': props['components'],
             'summary': props['summary'],
             'description': props['description'],
@@ -87,11 +88,13 @@ def create_issue(props):
             'priority': props['priority'],
             # 'versions': props['version'],
             # Custom "GitHub Issue" field
-            gh_issue_field: props[gh_issue_field],
-            # Custom "Epic Name" field
-            epic_field: props[epic_field]
+            gh_issue_field: props[gh_issue_field]
         }
     }
+
+    # Custom "Epic Name" field
+    if issue_type['name'] == 'Epic':
+        request_data[epic_field] = props[epic_field]
 
     response = requests.post(
         url,
