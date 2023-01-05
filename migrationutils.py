@@ -23,7 +23,8 @@ def component_map(gh_labels):
 
     component_map = {
         'squad:policy-grc': 'GRC',
-        'squad:doc': 'Documentation'
+        'squad:doc': 'Documentation',
+        'squad:qe': 'QE'
     }
 
     components = []
