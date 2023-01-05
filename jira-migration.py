@@ -73,7 +73,7 @@ if args.component_name:
 
 # Collect GitHub issues using query config or CLI
 gh_issues = ghutils.get_issues_by_label(
-    label_filter, f'{completion_label},{squad_completion_label}')
+    label_filter, f'{completion_label},{squad_completion_label},jira-epic')
 
 jira_mappings = []
 

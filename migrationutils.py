@@ -110,20 +110,33 @@ def issue_map(gh_issue, user_mappings, default_user):
     if gh_issue['assignee']:
         gh_assignee = gh_issue['assignee']['login']
 
+    # Make sure a string is returned for the issue body
+    issue_body = ''
+    if gh_issue['body']:
+        issue_body = gh_issue['body']
+
+    issue_title = gh_issue['title']
+    issue_type = type_map(gh_labels)
+    epic_name = ''
+    if issue_type == 'Epic':
+        epic_name = issue_title
+
     return {
         'issuetype': {
-            'name': type_map(gh_labels)
+            'name': issue_type
         },
         'components': components,
-        'summary': gh_issue['title'],
-        'description': gh_issue['body'],
+        'summary': issue_title,
+        'description': issue_body,
         'reporter': user_map(gh_issue['user']['login'], user_mappings, default_user),
         'assignee': user_map(gh_assignee, user_mappings),
         # 'status': '', <-- This would need to be pulled from ZenHub's Pipeline field
         'priority': priority_map(gh_labels),
         # 'version': '', -- This would need to be pulled from ZenHub's Release field
         # Custom "GitHub Issue" field
-        jirautils.gh_issue_field: gh_issue['html_url']
+        jirautils.gh_issue_field: gh_issue['html_url'],
+        # Custom "Epic Name" field
+        jirautils.epic_field: epic_name
     }, can_close
 
 

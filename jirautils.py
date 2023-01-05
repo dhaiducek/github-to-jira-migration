@@ -6,6 +6,7 @@ issue_url = f'{base_url}/issue'
 project_key = 'ACM'
 security_level = 'Red Hat Employee'  # To be safe, restrict to RH Employees
 gh_issue_field = 'customfield_12316846'
+epic_field = 'customfield_12311141'
 data = {
     'projectKeys': project_key
 }
@@ -86,7 +87,9 @@ def create_issue(props):
             'priority': props['priority'],
             # 'versions': props['version'],
             # Custom "GitHub Issue" field
-            gh_issue_field: props[gh_issue_field]
+            gh_issue_field: props[gh_issue_field],
+            # Custom "Epic Name" field
+            epic_field: props[epic_field]
         }
     }
 
