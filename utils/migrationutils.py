@@ -56,12 +56,9 @@ def priority_map(gh_labels):
 
     priority_map = {
         'blocker (P0)': 'Blocker',
-        'Priority/P1': 'Critical',
-        'Priority/P2': 'Major',
-        'Priority/P3': 'Normal',
-        'Severity 1 - Urgent': 'Critical',
-        'Severity 2 - Major': 'Major',
-        'Severity 3 - Minor': 'Normal',
+        'Priority/P1': 'Major',
+        'Priority/P2': 'Normal',
+        'Priority/P3': 'Minor',
     }
 
     priority = {
@@ -76,6 +73,30 @@ def priority_map(gh_labels):
                 break
 
     return priority
+
+
+def severity_map(gh_labels):
+    """Return the Jira severity from a given GitHub label"""
+
+    severity_map = {
+        'Severity 1 - Urgent': 'Critical',
+        'Severity 2 - Major': 'Moderate',
+        'Severity 3 - Minor': 'Low',
+    }
+
+    severity = {}
+
+    for label in gh_labels:
+        label_name = str(label['name'])
+        if label_name in severity_map:
+            if severity_map[label_name] != '':
+                severity['value'] = severity_map[label_name]
+                break
+
+    if 'value' in severity:
+        return severity
+
+    return None
 
 
 def should_close(gh_issue):
@@ -129,9 +150,13 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
         jirautils.gh_issue_field: gh_issue['html_url']
     }
 
-    # Custom "Epic Name" field
     if issue_type == 'Epic':
+        # Custom "Epic Name" field
         issue_mapping[jirautils.epic_field] = issue_title
+
+    if issue_type == 'Bug':
+        # Custom "Severity" field
+        issue_mapping[jirautils.severity_field] = severity_map(gh_labels)
 
     return issue_mapping, can_close
 

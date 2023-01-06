@@ -7,6 +7,7 @@ project_key = 'ACM'
 security_level = 'Red Hat Employee'  # To be safe, restrict to RH Employees
 gh_issue_field = 'customfield_12316846'
 epic_field = 'customfield_12311141'
+severity_field = 'customfield_12316142'
 data = {
     'projectKeys': project_key
 }
@@ -71,34 +72,35 @@ def create_issue(props):
     url = issue_url
     issue_type = props['issuetype']
     request_data = {
-        'fields': {
-            'project': {
-                'key': project_key
-            },
-            'security': {
-                'name': security_level
-            },
-            'issuetype': issue_type,
-            'components': props['components'],
-            'summary': props['summary'],
-            'description': props['description'],
-            'reporter': props['reporter'],
-            'assignee': props['assignee'],
-            # 'status': props['status'],
-            'priority': props['priority'],
-            # 'versions': props['version'],
-            # Custom "GitHub Issue" field
-            gh_issue_field: props[gh_issue_field]
-        }
+        'project': {
+            'key': project_key
+        },
+        'security': {
+            'name': security_level
+        },
+        'issuetype': issue_type,
+        'components': props['components'],
+        'summary': props['summary'],
+        'description': props['description'],
+        'reporter': props['reporter'],
+        'assignee': props['assignee'],
+        # 'status': props['status'],
+        'priority': props['priority'],
+        # 'versions': props['version'],
+        # Custom "GitHub Issue" field
+        gh_issue_field: props[gh_issue_field]
     }
 
-    # Custom "Epic Name" field
     if issue_type['name'] == 'Epic':
+        # Custom "Epic Name" field
         request_data[epic_field] = props[epic_field]
+    elif issue_type['name'] == 'Bug':
+        # Custom "Severity" field
+        request_data[severity_field] = props[severity_field]
 
     response = requests.post(
         url,
-        json=request_data,
+        json={'fields': request_data},
         headers=headers,
     )
 
