@@ -2,15 +2,15 @@ import ghutils
 import jirautils
 
 
-def user_map(gh_username, user_mappings, default_user=''):
+def user_map(gh_username, user_mapping, default_user=''):
     """Return the user e-mail from the usermap"""
-    assert user_mappings  # user_mappings cannot be None
+    assert user_mapping  # user_mapping cannot be None
 
     user = None
     user_email = default_user
 
-    if gh_username in user_mappings:
-        user_email = user_mappings[gh_username]
+    if gh_username in user_mapping:
+        user_email = user_mapping[gh_username]
 
     if user_email != '':
         user = {'name': jirautils.get_user(user_email)[0]['name']}
@@ -86,9 +86,9 @@ def should_close(gh_issue):
     return ghutils.has_label(gh_issue, no_close_labels)
 
 
-def issue_map(gh_issue, component_map, user_mappings, default_user):
+def issue_map(gh_issue, component_mapping, user_mapping, default_user):
     """Return a dict for Jira to process from a given GitHub issue"""
-    assert user_mappings  # user_mappings cannot be None
+    assert user_mapping  # user_mapping cannot be None
 
     gh_labels = gh_issue['labels']
 
@@ -97,7 +97,7 @@ def issue_map(gh_issue, component_map, user_mappings, default_user):
     # - It's connected to Bugzilla
     # - It's a multi-squad issue
     can_close = True
-    components, component_count = component_map(gh_labels, component_map)
+    components, component_count = component_map(gh_labels, component_mapping)
     if component_count > 1 or should_close(gh_issue):
         can_close = False
 
@@ -120,8 +120,8 @@ def issue_map(gh_issue, component_map, user_mappings, default_user):
         'components': components,
         'summary': issue_title,
         'description': issue_body,
-        'reporter': user_map(gh_issue['user']['login'], user_mappings, default_user),
-        'assignee': user_map(gh_assignee, user_mappings),
+        'reporter': user_map(gh_issue['user']['login'], user_mapping, default_user),
+        'assignee': user_map(gh_assignee, user_mapping),
         # 'status': '', <-- This would need to be pulled from ZenHub's Pipeline field
         'priority': priority_map(gh_labels),
         # 'version': '', <-- This would need to be pulled from ZenHub's Release field
