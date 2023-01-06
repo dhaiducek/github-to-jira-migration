@@ -1,5 +1,5 @@
-import ghutils
-import jirautils
+import utils.ghutils as ghutils
+import utils.jirautils as jirautils
 
 
 def user_map(gh_username, user_mapping, default_user=''):

@@ -1,7 +1,7 @@
 import utils.ghutils as ghutils
 import utils.jirautils as jirautils
-import json
 import utils.migrationutils as migrationutils
+import json
 from pprint import pprint
 import argparse
 
