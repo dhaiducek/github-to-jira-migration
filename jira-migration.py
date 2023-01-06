@@ -5,16 +5,30 @@ import utils.migrationutils as migrationutils
 from pprint import pprint
 import argparse
 
-config_file = open('config.json')
-config_json = json.load(config_file)
-config_file.close()
+try:
+    config_file = open('config.json')
+    config_json = json.load(config_file)
+    config_file.close()
+except:
+    print('* Error: config.json not found. Please populate the configuration file before continuing.')
+    exit(1)
+
+user_map_json = None
+try:
+    user_map_file = open('user_map.json')
+    user_map_json = json.load(user_map_file)
+    user_map_file.close()
+except:
+    print('* Warning: user_map.json not found. This may be ignored if user_map is supplied in config.json or isn\'t used.')
 
 user_map = {}
 component_map = {}
 if config_json:
     if 'component_map' in config_json:
         component_map = config_json['component_map']
-    if 'user_map' in config_json:
+    if user_map_json:
+        user_map = user_map_json
+    elif 'user_map' in config_json:
         user_map = config_json['user_map']
     if 'default_jira_user' in config_json:
         default_user = config_json['default_jira_user']

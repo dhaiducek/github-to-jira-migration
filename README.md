@@ -10,8 +10,10 @@ Largely inspired by the blog
 
 Rename and populate the following template files:
 
-- `migrationutils.py` - Authentication variables for GitHub and Jira
-- `config.json` - Configuration for GitHub issue label filtering and mapping GitHub users to Jira users
+- [`migrationutils.py`](migrationauth_template.py) - Authentication variables for GitHub and Jira
+- [`config.json`](config_template.json) - Configuration for GitHub issue label filtering
+- [`user_map.json`](user_map_template.json) - Mapping of GitHub users to Jira users (this can alternatively be supplied
+  using the `user_map` key in `config.json` or not supplied at all if user mapping is not desired.)
 
 ## Running the migration script
 
@@ -46,7 +48,7 @@ options:
 These scripts use some specific label filtering for my use cases. Here are some pointers if you're modifying for a
 different use case:
 
-- Update `base_url` in [`jirautils.py`](jirautils.py) and [`ghutils.py`](ghutils.py) to your instances
-- Update `project_key`, `security_level`, and custom fields in [`jirautils.py`](jirautils.py)
-- Look at the mapping flows in [`migrationutils.py`](migrationutils.py) (we heavily used labels in GitHub to specify
-  things like priority and component)
+- Update `base_url` in [`jirautils.py`](utils/jirautils.py) and [`ghutils.py`](utils/ghutils.py) to your instances
+- Update `project_key`, `security_level`, and custom fields in [`jirautils.py`](utils/jirautils.py)
+- Look at the mapping flows in [`migrationutils.py`](utils/migrationutils.py) (we heavily used labels in GitHub to
+  specify things like priority and component)

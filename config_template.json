@@ -7,8 +7,5 @@
   "default_jira_user": "jira-username/name/email",
   "component_map": {
     "gh-label": "jira-component"
-  },
-  "user_map": {
-    "gh-username": "jira-username/name/email"
   }
 }
