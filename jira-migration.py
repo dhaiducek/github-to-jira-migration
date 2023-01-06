@@ -1,7 +1,7 @@
-import ghutils
-import jirautils
+import utils.ghutils as ghutils
+import utils.jirautils as jirautils
 import json
-import migrationutils
+import utils.migrationutils as migrationutils
 from pprint import pprint
 import argparse
 
