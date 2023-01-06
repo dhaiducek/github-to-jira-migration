@@ -105,6 +105,23 @@ def create_issue(props):
     return response.json()
 
 
+def update_issue(issue_key, data):
+    """Update existing Jira issue"""
+
+    url = f'{issue_url}/{issue_key}'
+
+    request_data = {
+        'update': {},
+        'fields': data
+    }
+
+    return requests.put(
+        url,
+        headers=headers,
+        json=request_data
+    )
+
+
 def get_issue_from_url(api_url):
     """Get specific issue data given API URL"""
 
