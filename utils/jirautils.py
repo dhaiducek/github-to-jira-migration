@@ -8,6 +8,7 @@ security_level = 'Red Hat Employee'  # To be safe, restrict to RH Employees
 gh_issue_field = 'customfield_12316846'
 epic_field = 'customfield_12311141'
 severity_field = 'customfield_12316142'
+story_points_field = 'customfield_12310243'
 data = {
     'projectKeys': project_key
 }
@@ -65,6 +66,39 @@ def get_issue_meta(issue_type_name):
 
     return response.json()['projects'][0]['issuetypes'][0]
 
+def get_transitions(issue_key):
+    """Get available transitions for an issue"""
+
+    url = f'{issue_url}/{issue_key}/transitions'
+    data = {
+        'expand': 'transitions.fields'
+    }
+
+    return requests.get(
+        url,
+        headers=headers,
+        json=data
+    ).json()
+
+def do_transition(issue_key, target_status_name):
+    """Execute a transition for an issue"""
+
+    target_status = None
+    transition_response = get_transitions(issue_key)
+    for transition in transition_response['transitions']:
+        if target_status_name == transition['name']:
+            target_status = {'id': transition['id']}
+
+    url = f'{issue_url}/{issue_key}/transitions'
+    data = {
+        'transition': target_status
+    }
+
+    return requests.post(
+        url,
+        headers=headers,
+        json=data
+    )
 
 def create_issue(props):
     """Create Jira issue"""
@@ -84,9 +118,10 @@ def create_issue(props):
         'description': props['description'],
         'reporter': props['reporter'],
         'assignee': props['assignee'],
-        # 'status': props['status'],
         'priority': props['priority'],
-        # 'versions': props['version'],
+        'fixVersions': props['fixVersions'],
+        # Custom "Story Points" field
+        story_points_field: props[story_points_field],
         # Custom "GitHub Issue" field
         gh_issue_field: props[gh_issue_field]
     }

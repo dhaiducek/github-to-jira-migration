@@ -1,5 +1,6 @@
 import utils.ghutils as ghutils
 import utils.jirautils as jirautils
+import utils.zenhubutils as zenhubutils
 
 
 def user_map(gh_username, user_mapping, default_user=''):
@@ -99,6 +100,42 @@ def severity_map(gh_labels):
     return None
 
 
+def status_map(pipeline, issue_type):
+    """Return equivalent Jira status for a given ZenHub pipeline"""
+
+    # Untriaged and Backlogs will remain in the state on creation ("New" or "To Do")
+    pipeline_map = {
+        "In Progress": {
+            "Bug": "ASSIGNED",
+            "Default": "In Progress"
+        },
+        "Awaiting Verification": {
+            "Bug": "ON_QA",
+            "Default": "Review",
+            "Epic": "Testing"
+        },
+        "Epics In Progress": "In Progress",
+        "Ready For Playback": {
+            "Bug": "ON_QA",
+            "Epic": "Testing",
+            "Default": "Review"
+        },
+        "Awaiting Docs": "In Progress",
+        "Closed": "Closed"
+    }
+
+    if pipeline in pipeline_map:
+        mapping_obj = pipeline_map[pipeline]
+        if isinstance(mapping_obj, str):
+            return mapping_obj
+        if issue_type in mapping_obj:
+            return mapping_obj[issue_type]
+        if 'Default' in mapping_obj:
+            return mapping_obj['Default']
+
+    return None
+
+
 def should_close(gh_issue):
     """Return the whether an issue has a label signaling it should not be closed"""
 
@@ -134,6 +171,14 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
     issue_title = gh_issue['title']
     issue_type = type_map(gh_labels)
 
+    zenhub_data = zenhubutils.get_issue_data(str(gh_issue['number']))
+
+    releases = []
+    for release in zenhub_data['releases']:
+        releases.append({
+            'name': release
+        })
+
     issue_mapping = {
         'issuetype': {
             'name': issue_type
@@ -143,9 +188,10 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
         'description': issue_body,
         'reporter': user_map(gh_issue['user']['login'], user_mapping, default_user),
         'assignee': user_map(gh_assignee, user_mapping),
-        # 'status': '', <-- This would need to be pulled from ZenHub's Pipeline field
+        'status': status_map(zenhub_data['pipeline'], issue_type),
         'priority': priority_map(gh_labels),
-        # 'version': '', <-- This would need to be pulled from ZenHub's Release field
+        'fixVersions': releases,
+        jirautils.story_points_field: zenhub_data['estimate'],
         # Custom "GitHub Issue" field
         jirautils.gh_issue_field: gh_issue['html_url']
     }

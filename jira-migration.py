@@ -160,6 +160,15 @@ for jira_map in jira_mappings:
             if args.verbose:
                 pprint(comment_response)
 
+    print(
+        f'* Adjusting status of Jira issue to match ZenHub pipeline {jira_key}')
+    if not args.dry_run:
+        if jira_map['issue']['status']:
+            transition_response = jirautils.do_transition(
+                jira_key, jira_map['issue']['status'])
+            if args.verbose:
+                pprint(transition_response)
+
     # Add comment in GH issue with link to new Jira issue
     gh_issue_number = jira_map['gh_issue_number']
     jira_html_url = f'https://issues.redhat.com/browse/{jira_key}'
