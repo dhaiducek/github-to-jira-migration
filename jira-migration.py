@@ -131,9 +131,22 @@ for gh_issue in gh_issues:
 
 # Iterate over Jira mappings to create issues with comments
 issue_failures = []
+duplicate_issues = {}
 for jira_map in jira_mappings:
+    gh_issue_url = jira_map['issue'][jirautils.gh_issue_field]
+    gh_issue_title = jira_map['issue']['summary']
     print(
-        f'* Creating Jira issue for {jira_map["issue"][jirautils.gh_issue_field]} ({jira_map["issue"]["summary"]})')
+        '* Checking for issues already linked to GitHub issue ' +
+        f'{gh_issue_url} ({gh_issue_title})')
+
+    custom_field_index = jirautils.gh_issue_field.split('_')[1]
+    custom_field = f'cf[{custom_field_index}]'
+    duplicate_list = jirautils.search_issues(f'{custom_field} = "{gh_issue_url}"')['issues']
+    if len(duplicate_list) > 0:
+        duplicate_issues[gh_issue_url] = list(map(lambda issue: issue['key'], duplicate_list))
+
+    print(
+        f'* Creating Jira issue for {gh_issue_url} ({gh_issue_title})')
 
     jira_api_url = ''
     jira_key = ''
@@ -148,7 +161,7 @@ for jira_map in jira_mappings:
 
     if not args.dry_run and jira_key == '':
         print('* Error: A Jira key was not returned in the creation response')
-        issue_failures.append(jira_map["issue"][jirautils.gh_issue_field])
+        issue_failures.append(gh_issue_url)
         continue
 
     print(f'* Adding comments from GitHub to new Jira issue {jira_key}')
@@ -171,7 +184,7 @@ for jira_map in jira_mappings:
 
     # Add comment in GH issue with link to new Jira issue
     gh_issue_number = jira_map['gh_issue_number']
-    jira_html_url = f'https://issues.redhat.com/browse/{jira_key}'
+    jira_html_url = f'{jirautils.html_url}/{jira_key}'
     gh_comment = 'This issue has been migrated to Jira'
     if component_name != '':
         gh_comment += f' for {component_name}'
@@ -204,4 +217,9 @@ for jira_map in jira_mappings:
 if len(issue_failures) > 0:
     print('* Failed to create Jira issues for:')
     for issue in issue_failures:
-        print(issue)
+        print(f'  {issue}')
+
+if len(duplicate_issues) > 0:
+    print('* Duplicate issues detected for review:')
+    for issue in duplicate_issues:
+        print(f'  {issue}: {duplicate_issues[issue]}')

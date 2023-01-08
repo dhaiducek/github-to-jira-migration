@@ -2,6 +2,7 @@ import migrationauth
 import requests
 
 base_url = 'https://issues.redhat.com/rest/api/latest'
+html_url = 'https://issues.redhat.com/browse'
 issue_url = f'{base_url}/issue'
 project_key = 'ACM'
 security_level = 'Red Hat Employee'  # To be safe, restrict to RH Employees
@@ -66,6 +67,7 @@ def get_issue_meta(issue_type_name):
 
     return response.json()['projects'][0]['issuetypes'][0]
 
+
 def get_transitions(issue_key):
     """Get available transitions for an issue"""
 
@@ -79,6 +81,7 @@ def get_transitions(issue_key):
         headers=headers,
         json=data
     ).json()
+
 
 def do_transition(issue_key, target_status_name):
     """Execute a transition for an issue"""
@@ -99,6 +102,7 @@ def do_transition(issue_key, target_status_name):
         headers=headers,
         json=data
     )
+
 
 def create_issue(props):
     """Create Jira issue"""
@@ -176,6 +180,21 @@ def get_single_issue(issue_key):
     response = get_issue_from_url(url)
 
     return response.json()
+
+
+def search_issues(jql_query):
+    """Get issues based on JQL query"""
+
+    url = f'{base_url}/search'
+
+    return requests.post(
+        url,
+        headers=headers,
+        json={
+            'jql': jql_query,
+            # 'fields': ['status']
+        }
+    ).json()
 
 
 def add_comment(issue_key, props):
