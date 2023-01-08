@@ -52,3 +52,9 @@ different use case:
 - Update `project_key`, `security_level`, and custom fields in [`jirautils.py`](utils/jirautils.py)
 - Look at the mapping flows in [`migrationutils.py`](utils/migrationutils.py) (we heavily used labels in GitHub to
   specify things like priority and component)
+
+## Resources
+
+- [GitHub API](https://docs.github.com/en/rest)
+- [Jira API](https://docs.atlassian.com/software/jira/docs/api/REST/latest)
+- [ZenHub API](https://developers.zenhub.com/graphql-api-docs/getting-started)
