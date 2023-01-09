@@ -57,7 +57,7 @@ def priority_map(gh_labels):
 
     priority_map = {
         'blocker (P0)': 'Blocker',
-        'Priority/P1': 'Major',
+        'Priority/P1': 'Critical',
         'Priority/P2': 'Normal',
         'Priority/P3': 'Minor',
     }
