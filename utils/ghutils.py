@@ -1,7 +1,9 @@
 import migrationauth
 import requests
 
-base_url = 'https://api.github.com/repos/stolostron/backlog/issues'
+org_repo = 'stolostron/backlog'
+root_url = 'https://api.github.com/repos'
+base_url = f'{root_url}/{org_repo}/issues'
 
 
 def get_issues_by_label(labels, label_exclusions, pagination=100):

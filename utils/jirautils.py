@@ -1,8 +1,9 @@
 import migrationauth
 import requests
 
-base_url = 'https://issues.redhat.com/rest/api/latest'
-html_url = 'https://issues.redhat.com/browse'
+root_url = 'https://issues.redhat.com'
+base_url = f'{root_url}/rest/api/latest'
+html_url = f'{root_url}/browse'
 issue_url = f'{base_url}/issue'
 project_key = 'ACM'
 security_level = 'Red Hat Employee'  # To be safe, restrict to RH Employees

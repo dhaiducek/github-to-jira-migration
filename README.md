@@ -51,7 +51,8 @@ options:
 These scripts use some specific label filtering for my use cases. Here are some pointers if you're modifying for a
 different use case:
 
-- Update `base_url` in [`jirautils.py`](utils/jirautils.py) and [`ghutils.py`](utils/ghutils.py) to your instances
+- Update `root_url` in [`jirautils.py`](utils/jirautils.py)
+- Update `org_repo` in [`ghutils.py`](utils/ghutils.py)
 - Update `project_key`, `security_level`, and custom fields in [`jirautils.py`](utils/jirautils.py)
 - Look at the mapping flows in [`migrationutils.py`](utils/migrationutils.py) (we heavily used labels in GitHub to
   specify things like priority and component)
