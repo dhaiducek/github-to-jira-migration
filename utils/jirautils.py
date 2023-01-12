@@ -7,8 +7,9 @@ html_url = f'{root_url}/browse'
 issue_url = f'{base_url}/issue'
 project_key = 'ACM'
 security_level = 'Red Hat Employee'  # To be safe, restrict to RH Employees
-gh_issue_field = 'customfield_12316846'
+contributors_field = 'customfield_12315950'
 epic_field = 'customfield_12311141'
+gh_issue_field = 'customfield_12316846'
 severity_field = 'customfield_12316142'
 story_points_field = 'customfield_12310243'
 data = {
@@ -125,6 +126,8 @@ def create_issue(props):
         'assignee': props['assignee'],
         'priority': props['priority'],
         'fixVersions': props['fixVersions'],
+        # Custom "Contributors" field
+        contributors_field: props[contributors_field],
         # Custom "Story Points" field
         story_points_field: props[story_points_field],
         # Custom "GitHub Issue" field

@@ -159,9 +159,15 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
     if component_count > 1 or should_close(gh_issue):
         can_close = False
 
-    gh_assignee = ''
-    if gh_issue['assignee']:
-        gh_assignee = gh_issue['assignee']['login']
+    assignee = None
+    contributors = []
+    for gh_assignee in gh_issue['assignees']:
+        assignee_id = user_map(gh_assignee['login'], user_mapping)
+        if assignee_id:
+            if assignee:
+                contributors.append(assignee_id)
+            else:
+                assignee = assignee_id
 
     # Make sure a string is returned for the issue body
     issue_body = ''
@@ -187,12 +193,12 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
         'summary': issue_title,
         'description': issue_body,
         'reporter': user_map(gh_issue['user']['login'], user_mapping, default_user),
-        'assignee': user_map(gh_assignee, user_mapping),
+        'assignee': assignee,
+        jirautils.contributors_field: contributors,
         'status': status_map(zenhub_data['pipeline'], issue_type),
         'priority': priority_map(gh_labels),
         'fixVersions': releases,
         jirautils.story_points_field: zenhub_data['estimate'],
-        # Custom "GitHub Issue" field
         jirautils.gh_issue_field: gh_issue['html_url']
     }
 
