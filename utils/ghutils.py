@@ -27,12 +27,19 @@ def get_issues_by_label(labels, label_exclusions, pagination=100):
             auth=(migrationauth.GH_USERNAME, migrationauth.GH_TOKEN),
             params=data
         )
-        # Get all the issues excluding the PRs and specified labels
-        issues.extend([issue for issue in response.json()
-                      if not has_label(issue, label_exclusions) and not issue.get("pull_request")])
+
+        if response.status_code == 200:
+            # Get all the issues excluding the PRs and specified labels
+            issues.extend([issue for issue in response.json()
+                        if not has_label(issue, label_exclusions) and not issue.get("pull_request")])
+        
+        else:
+            print(f'* An unexpected response was returned from GitHub: {response}')
+            print(response.json())
+            exit(1)
 
         if not 'next' in response.links.keys():
-            break
+                break
 
     return issues
 

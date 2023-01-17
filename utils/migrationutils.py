@@ -5,7 +5,7 @@ import utils.zenhubutils as zenhubutils
 
 def user_map(gh_username, user_mapping, default_user=''):
     """Return the user e-mail from the usermap"""
-    assert user_mapping  # user_mapping cannot be None
+    assert user_mapping != None  # user_mapping cannot be None
 
     user = None
     user_email = default_user
@@ -14,7 +14,9 @@ def user_map(gh_username, user_mapping, default_user=''):
         user_email = user_mapping[gh_username]
 
     if user_email != '':
-        user = {'name': jirautils.get_user(user_email)[0]['name']}
+        user_query = jirautils.get_user(user_email)
+        if len(user_query) > 0:
+            user = {'name': user_query[0]['name']}
 
     return user
 
@@ -149,7 +151,7 @@ def should_close(gh_issue):
 
 def issue_map(gh_issue, component_mapping, user_mapping, default_user):
     """Return a dict for Jira to process from a given GitHub issue"""
-    assert user_mapping  # user_mapping cannot be None
+    assert user_mapping != None  # user_mapping cannot be None
 
     gh_labels = gh_issue['labels']
 

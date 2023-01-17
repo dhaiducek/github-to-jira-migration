@@ -38,9 +38,15 @@ def get_issue_data(gh_issue_number):
         base_url,
         headers=headers,
         json={'query': query}
-    ).json()
+    )
 
-    issue_info = response['data']['issueByInfo']
+    if response.status_code != 200:
+      print(f'* An unexpected response was returned from ZenHub: {response}')
+      exit(1)
+
+    response_json = response.json()
+
+    issue_info = response_json['data']['issueByInfo']
 
     estimate = None
     if issue_info['estimate']:

@@ -148,6 +148,11 @@ def create_issue(props):
         headers=headers,
     )
 
+    if response.status_code != 201:
+        print(f'* An unexpected response was returned from Jira: {response}')
+        print(response.json())
+        exit(1)
+
     return response.json()
 
 
