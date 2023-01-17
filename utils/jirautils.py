@@ -126,6 +126,7 @@ def create_issue(props):
         'assignee': props['assignee'],
         'priority': props['priority'],
         'fixVersions': props['fixVersions'],
+        'labels': props['labels'],
         # Custom "Contributors" field
         contributors_field: props[contributors_field],
         # Custom "Story Points" field

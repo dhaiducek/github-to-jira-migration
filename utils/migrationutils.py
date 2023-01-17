@@ -24,14 +24,17 @@ def component_map(gh_labels, component_map):
 
     components = []
     component_count = 0
+    is_ui = False
     for label in gh_labels:
         label_name = str(label['name'])
         if label_name.startswith('squad:'):
             component_count += 1
             if label_name in component_map:
                 components.append({'name': component_map[label_name]})
+                if label_name.endswith("-ui"):
+                    is_ui = True
 
-    return components, component_count
+    return components, component_count, is_ui
 
 
 def type_map(gh_labels):
@@ -155,7 +158,7 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
     # - It's connected to Bugzilla
     # - It's a multi-squad issue
     can_close = True
-    components, component_count = component_map(gh_labels, component_mapping)
+    components, component_count, is_ui = component_map(gh_labels, component_mapping)
     if component_count > 1 or should_close(gh_issue):
         can_close = False
 
@@ -201,6 +204,9 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
         jirautils.story_points_field: zenhub_data['estimate'],
         jirautils.gh_issue_field: gh_issue['html_url']
     }
+
+    if is_ui:
+        issue_mapping['labels'] = ['ui']
 
     if issue_type == 'Epic':
         # Custom "Epic Name" field
