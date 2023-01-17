@@ -8,12 +8,18 @@ Largely inspired by the blog
 
 ## Prerequisites
 
-Rename and populate the following template files:
+1. Install Python dependencies:
 
-- [`migrationutils.py`](migrationauth_template.py) - Authentication variables for GitHub and Jira
-- [`config.json`](config_template.json) - Configuration for GitHub issue label filtering
-- [`user_map.json`](user_map_template.json) - Mapping of GitHub users to Jira users (this can alternatively be supplied
-  using the `user_map` key in `config.json` or not supplied at all if user mapping is not desired.)
+   ```shell
+   python3 -m pip install requests argparse
+   ```
+
+2. Rename and populate the following template files:
+
+   - [`migrationutils.py`](migrationauth_template.py) - Authentication variables for GitHub and Jira
+   - [`config.json`](config_template.json) - Configuration for GitHub issue label filtering
+   - [`user_map.json`](user_map_template.json) - Mapping of GitHub users to Jira users (this can alternatively be supplied
+     using the `user_map` key in `config.json` or not supplied at all if user mapping is not desired.)
 
 ## Running the migration script
 
