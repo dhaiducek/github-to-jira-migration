@@ -40,8 +40,8 @@ def get_issue_data(gh_issue_number):
         json={'query': query}
     )
 
-    if response.status_code != 200:
-      print(f'* An unexpected response was returned from ZenHub: {response}')
+    if not response.ok:
+      print(f'* An unexpected response was returned from ZenHub: {response} {response.reason}')
       exit(1)
 
     response_json = response.json()

@@ -28,15 +28,14 @@ def get_issues_by_label(labels, label_exclusions, pagination=100):
             params=data
         )
 
-        if response.status_code == 200:
-            # Get all the issues excluding the PRs and specified labels
-            issues.extend([issue for issue in response.json()
-                        if not has_label(issue, label_exclusions) and not issue.get("pull_request")])
-        
-        else:
-            print(f'* An unexpected response was returned from GitHub: {response}')
+        if not response.ok:
+            print(f'* An unexpected response was returned from GitHub: {response} {response.reason}')
             print(response.json())
             exit(1)
+
+        # Get all the issues excluding the PRs and specified labels
+        issues.extend([issue for issue in response.json()
+                       if not has_label(issue, label_exclusions) and not issue.get("pull_request")])
 
         if not 'next' in response.links.keys():
                 break
