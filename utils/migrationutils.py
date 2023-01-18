@@ -15,7 +15,7 @@ def user_map(gh_username, user_mapping, default_user=''):
 
     if user_email != '':
         user_query = jirautils.get_user(user_email)
-        if len(user_query) > 0:
+        if user_query and len(user_query) > 0:
             user = {'name': user_query[0]['name']}
 
     return user
@@ -160,7 +160,8 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
     # - It's connected to Bugzilla
     # - It's a multi-squad issue
     can_close = True
-    components, component_count, is_ui = component_map(gh_labels, component_mapping)
+    components, component_count, is_ui = component_map(
+        gh_labels, component_mapping)
     if component_count > 1 or should_close(gh_issue):
         can_close = False
 
@@ -190,6 +191,11 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
             'name': release
         })
 
+    # Handle labels
+    labels = []
+    if is_ui:
+        labels.append('ui')
+
     issue_mapping = {
         'issuetype': {
             'name': issue_type
@@ -203,12 +209,10 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
         'status': status_map(zenhub_data['pipeline'], issue_type),
         'priority': priority_map(gh_labels),
         'fixVersions': releases,
+        'labels': labels,
         jirautils.story_points_field: zenhub_data['estimate'],
         jirautils.gh_issue_field: gh_issue['html_url']
     }
-
-    if is_ui:
-        issue_mapping['labels'] = ['ui']
 
     if issue_type == 'Epic':
         # Custom "Epic Name" field
