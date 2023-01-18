@@ -36,7 +36,8 @@ def get_user(user_query):
     )
 
     if not response.ok:
-        print(f"An unexpected response was returned from Jira: {response} {response.reason}")
+        print(
+            f"An unexpected response was returned from Jira: {response} {response.reason}")
         exit(1)
 
     return response.json()
@@ -153,7 +154,8 @@ def create_issue(props):
     )
 
     if not response.ok:
-        print(f'* An unexpected response was returned from Jira: {response} {response.reason}')
+        print(
+            f'* An unexpected response was returned from Jira: {response} {response.reason}')
         print(response.json())
         exit(1)
 

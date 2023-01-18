@@ -41,8 +41,9 @@ def get_issue_data(gh_issue_number):
     )
 
     if not response.ok:
-      print(f'* An unexpected response was returned from ZenHub: {response} {response.reason}')
-      exit(1)
+        print(
+            f'* An unexpected response was returned from ZenHub: {response} {response.reason}')
+        exit(1)
 
     response_json = response.json()
 
@@ -50,16 +51,16 @@ def get_issue_data(gh_issue_number):
 
     estimate = None
     if issue_info['estimate']:
-      estimate = issue_info['estimate']['value']
+        estimate = issue_info['estimate']['value']
 
     pipeline = issue_info['pipelineIssue']['pipeline']['name']
 
     releases = []
     for release in issue_info['releases']['nodes']:
-      releases.append(release['title'])
-      
+        releases.append(release['title'])
+
     return {
-      'estimate': estimate,
-      'pipeline': pipeline, 
-      'releases': releases
+        'estimate': estimate,
+        'pipeline': pipeline,
+        'releases': releases
     }

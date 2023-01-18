@@ -29,7 +29,8 @@ def get_issues_by_label(labels, label_exclusions, pagination=100):
         )
 
         if not response.ok:
-            print(f'* An unexpected response was returned from GitHub: {response} {response.reason}')
+            print(
+                f'* An unexpected response was returned from GitHub: {response} {response.reason}')
             print(response.json())
             exit(1)
 
@@ -38,7 +39,7 @@ def get_issues_by_label(labels, label_exclusions, pagination=100):
                        if not has_label(issue, label_exclusions) and not issue.get("pull_request")])
 
         if not 'next' in response.links.keys():
-                break
+            break
 
     return issues
 

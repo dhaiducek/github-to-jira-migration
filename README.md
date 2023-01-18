@@ -26,8 +26,8 @@ Largely inspired by the blog
 Invoke the script using the Python CLI. Use arguments to override the `config.json` file, display verbose logging, or
 run a dry run:
 
-**NOTE**: Running with `--dry-run` and `-v` prior to migration is highly recommended. While the output is long, you'll
-be able to verify data that is being passed to Jira.
+**NOTE**: Running with `--dry-run` and/or `--dry-run -v` prior to migration is highly recommended. While the output is
+long, you'll be able to verify data that is being passed to Jira.
 
 ```
 $ python3 jira-migration.py --help

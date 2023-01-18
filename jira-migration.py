@@ -146,9 +146,11 @@ for jira_map in jira_mappings:
 
     custom_field_index = jirautils.gh_issue_field.split('_')[1]
     custom_field = f'cf[{custom_field_index}]'
-    duplicate_list = jirautils.search_issues(f'{custom_field} = "{gh_issue_url}"')['issues']
+    duplicate_list = jirautils.search_issues(
+        f'{custom_field} = "{gh_issue_url}"')['issues']
     if len(duplicate_list) > 0:
-        duplicate_issues[gh_issue_url] = list(map(lambda issue: issue['key'], duplicate_list))
+        duplicate_issues[gh_issue_url] = list(
+            map(lambda issue: issue['key'], duplicate_list))
 
     print(
         f'* Creating Jira issue for {gh_issue_url} ({gh_issue_title})')
