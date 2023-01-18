@@ -2,6 +2,7 @@ import utils.ghutils as ghutils
 import utils.jirautils as jirautils
 import utils.zenhubutils as zenhubutils
 
+jira_product_versions = {}
 
 def user_map(gh_username, user_mapping, default_user=''):
     """Return the user e-mail from the usermap"""
@@ -187,9 +188,19 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
 
     releases = []
     for release in zenhub_data['releases']:
-        releases.append({
-            'name': release
-        })
+        # Only fetch if not already populated
+        if not issue_type in jira_product_versions:
+            print(f'* Fetching releases for issue type {issue_type}')
+            version_response = jirautils.get_issue_meta(issue_type)['fields']['fixVersions']['allowedValues']
+            if len(version_response) > 0:
+                jira_product_versions[issue_type] = list(map(lambda version: version['name'], version_response))
+
+        for version in jira_product_versions[issue_type]:
+            if version == release:
+                releases.append({
+                    'name': release
+                })
+                break
 
     # Handle labels
     labels = []

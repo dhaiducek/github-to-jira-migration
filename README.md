@@ -18,13 +18,16 @@ Largely inspired by the blog
 
    - [`migrationutils.py`](migrationauth_template.py) - Authentication variables for GitHub and Jira
    - [`config.json`](config_template.json) - Configuration for GitHub issue label filtering
-   - [`user_map.json`](user_map_template.json) - Mapping of GitHub users to Jira users (this can alternatively be supplied
-     using the `user_map` key in `config.json` or not supplied at all if user mapping is not desired.)
+   - [`user_map.json`](user_map_template.json) - Mapping of GitHub users to Jira users (this can alternatively be
+     supplied using the `user_map` key in `config.json` or not supplied at all if user mapping is not desired.)
 
 ## Running the migration script
 
 Invoke the script using the Python CLI. Use arguments to override the `config.json` file, display verbose logging, or
 run a dry run:
+
+**NOTE**: Running with `--dry-run` and `-v` prior to migration is highly recommended. While the output is long, you'll
+be able to verify data that is being passed to Jira.
 
 ```
 $ python3 jira-migration.py --help
