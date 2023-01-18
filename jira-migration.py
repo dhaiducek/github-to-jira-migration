@@ -97,10 +97,15 @@ if args.component_name:
     component_name = args.component_name
 
 # Collect GitHub issues using query config or CLI
-gh_issues = ghutils.get_issues_by_label(
-    label_filter, f'{completion_label},{squad_completion_label},{label_exclusions}')
+label_exclusions = f'{completion_label},{squad_completion_label},{label_exclusions}'
+gh_issues = ghutils.get_issues_by_label(label_filter, label_exclusions)
 
 jira_mappings = []
+
+if len(gh_issues) == 0:
+    print('* No issues were returned from GitHub:')
+    print(f'  Label filter:     {label_filter}')
+    print(f'  Label exclusions: {label_exclusions}')
 
 # Iterate over GitHub issues and collect mapping objects
 for gh_issue in gh_issues:
