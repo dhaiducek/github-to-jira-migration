@@ -37,6 +37,9 @@ def component_map(gh_labels, component_map):
                 components.append({'name': component_map[label_name]})
                 if label_name.endswith("-ui"):
                     is_ui = True
+        elif label_name in component_map:
+            component_count += 1
+            components.append({'name': component_map[label_name]})
 
     return components, component_count, is_ui
 
