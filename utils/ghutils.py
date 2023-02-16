@@ -6,6 +6,16 @@ root_url = 'https://api.github.com/repos'
 base_url = f'{root_url}/{org_repo}/issues'
 
 
+def get_repo():
+    """Get repo object for current repo specified in org_repo"""
+
+    url = f'{root_url}/{org_repo}'
+    return requests.get(
+        url,
+        auth=(migrationauth.GH_USERNAME, migrationauth.GH_TOKEN)
+    ).json()
+
+
 def get_issues_by_label(labels, label_exclusions, pagination=100):
     """Get list of issues by label"""
     assert 0 < pagination <= 100  # pagination size needs to be set properly

@@ -6,11 +6,10 @@ headers = {
     'Authorization': f'Bearer {migrationauth.ZENHUB_TOKEN}',
     'Content-Type': 'application/json',
 }
-gh_repo_id = '239633281'
 workspace_id = '604fab62d4b98d00150a2854'
 
 
-def get_issue_data(gh_issue_number):
+def get_issue_data(gh_repo_id, gh_issue_number):
     """Get ZenHub Pipeline and Releases for a GitHub issue"""
 
     query = """query {

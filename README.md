@@ -17,7 +17,8 @@ Largely inspired by the blog
 2. Rename and populate the following template files:
 
    - [`migrationutils.py`](migrationauth_template.py) - Authentication variables for GitHub and Jira
-   - [`config.json`](config_template.json) - Configuration for GitHub issue label filtering
+   - [`config.json`](config_template.json) - Configuration for GitHub issue label filtering (A `config.json` can be
+     renamed to `config\_\*.json` if you want to reserve unused configs for later but not track them in Git.)
    - [`user_map.json`](user_map_template.json) - Mapping of GitHub users to Jira users (this can alternatively be
      supplied using the `user_map` key in `config.json` or not supplied at all if user mapping is not desired.)
 
@@ -61,8 +62,9 @@ These scripts use some specific label filtering for my use cases. Here are some 
 different use case:
 
 - Update `root_url` in [`jirautils.py`](utils/jirautils.py)
-- Update `org_repo` in [`ghutils.py`](utils/ghutils.py)
 - Update `project_key`, `security_level`, and custom fields in [`jirautils.py`](utils/jirautils.py)
+- Update `org_repo` in [`ghutils.py`](utils/ghutils.py)
+- Update `workspace_id` in [`zenhubutils.py`](utils/zenhubutils.py)
 - Look at the mapping flows in [`migrationutils.py`](utils/migrationutils.py) (we heavily used labels in GitHub to
   specify things like priority and component)
 

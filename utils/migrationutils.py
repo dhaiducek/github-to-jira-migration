@@ -3,6 +3,7 @@ import utils.jirautils as jirautils
 import utils.zenhubutils as zenhubutils
 
 jira_product_versions = {}
+gh_repo_id = ""
 
 
 def user_map(gh_username, user_mapping, default_user=''):
@@ -188,7 +189,14 @@ def issue_map(gh_issue, component_mapping, user_mapping, default_user):
     issue_title = gh_issue['title']
     issue_type = type_map(gh_labels)
 
-    zenhub_data = zenhubutils.get_issue_data(str(gh_issue['number']))
+    # Fetch repo ID if not already populated
+    global gh_repo_id
+    if gh_repo_id == "":
+        gh_repo_id = str(ghutils.get_repo()['id'])
+    
+    # Gather ZenHub issue data
+    zenhub_data = zenhubutils.get_issue_data(
+        gh_repo_id, str(gh_issue['number']))
 
     releases = []
     for release in zenhub_data['releases']:

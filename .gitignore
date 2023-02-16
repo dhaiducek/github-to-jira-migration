@@ -1,3 +1,5 @@
+config_*.json
+!config_template.json
 config.json
 migrationauth.py
 user_map.json
